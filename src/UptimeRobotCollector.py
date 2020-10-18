@@ -7,6 +7,7 @@ from UptimeRobotReadApi import UptimeRobotReadApi
 # Define metrics
 up = Gauge('uptimerobot_up',
            'The last scrape was successful')
+           
 scrape_duration_seconds = Gauge('uptimerobot_scrape_duration_seconds',
                                 'The duration of the last scrape in seconds')
 

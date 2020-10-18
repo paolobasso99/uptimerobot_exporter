@@ -1,4 +1,3 @@
-import random
 import time
 import os
 import logging
@@ -12,6 +11,10 @@ if __name__ == '__main__':
 
     # Load and check envirorment variables
     load_dotenv()
+
+    PORT = 8000
+    if "PORT" in os.environ:
+        PORT = int(os.getenv("PORT"))
 
     if "UPTIMEROBOT_READ_API_KEY" not in os.environ:
         raise ValueError(
@@ -41,14 +44,15 @@ if __name__ == '__main__':
     logging.info("Initializated uptimerobot_exporter with:")
     logging.info("LOG_LEVEL="+os.getenv("LOG_LEVEL"))
     logging.info("INTERVAL_SECONDS="+os.getenv("INTERVAL_SECONDS"))
+    logging.info(f"Access http://localhost:{PORT}")
 
     # Create collector instance
     collector = UptimeRobotCollector(os.getenv("UPTIMEROBOT_READ_API_KEY"))
 
     # Start up the server to expose the metrics.
-    start_http_server(8000)
+    start_http_server(PORT)
 
-    # Collect
+    # Collects
     while True:
         collector.collect()
         time.sleep(INTERVAL_SECONDS)

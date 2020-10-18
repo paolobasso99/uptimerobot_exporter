@@ -1,0 +1,15 @@
+version: "3"
+
+services:
+  uptimerobot_exporter:
+    image: paolobasso/uptimerobot_exporter
+    build: .
+    container_name: uptimerobot_exporter
+    environment:
+      - UPTIMEROBOT_READ_API_KEY=${UPTIMEROBOT_READ_API_KEY}
+      - INTERVAL_SECONDS=${INTERVAL_SECONDS}
+      - LOG_LEVEL=${LOG_LEVEL}
+      - PORT=${PORT}
+    ports:
+      - 8000:8000
+    restart: unless-stopped
