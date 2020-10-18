@@ -2,14 +2,19 @@
 uptimerobot_exporter is a [Prometheus](https://prometheus.io/) exporter for [UptimeRobot](https://uptimerobot.com/).
 
 ## TO DO
-1. [ ] Add more metrics
-2. [ ] Test, test, testttttt
+1. [ ] Add setup to readme
+2. [ ] Add more metrics
+3. [x] General refactor
+4. [ ] Test, test, testttttt
+5. [ ] Code coverage
 
 ## Grafana Dashboard
-You can find the Grafana dashboard to visualize these metrics [here](https://to-be-defined/).
+You can find the Grafana dashboard to visualize the metrics exposed by this exporter [here](https://to-be-defined/) and it looks like this:
+
+![Dashboard](https://github.com/paolobasso99/uptimerobot_exporter/blob/main/dashboard.png?raw=true)
 
 ## Why 
-I needed a Prometheus exporter for UptimeRobot and the existing ones that I found are old, not updated or they expose not enough metrics. It was also an opportunity to learn more about Prometheus.
+I needed a Prometheus exporter for UptimeRobot and the existing ones that I found are either old, not updated, poorly documented or they expose not enough metrics. It was also an opportunity to learn more about Prometheus.
 
 ## Technologies
 1. [Prometheus](https://prometheus.io/)
@@ -26,6 +31,8 @@ I needed a Prometheus exporter for UptimeRobot and the existing ones that I foun
 4. Dockerizing a simple Python application
 5. Auto publishing Docker images to Docker Hub with GitHub actions
 6. Tesing a simple python application
+7. Self Hosting Prometheus
+8. Self Hosting Grafana
 
 ## License
 GNU AFFERO GENERAL PUBLIC LICENSE Version 3

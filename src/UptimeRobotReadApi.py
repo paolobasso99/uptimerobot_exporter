@@ -1,29 +1,71 @@
 import requests
-import json
+from typing import Tuple
 
 
 class UptimeRobotReadApi():
-    def __init__(self, api_key):
-        self.api_key = api_key
-        self.base_url = "https://api.uptimerobot.com/v2/"
+    """UptimeRobot API wrapper class.
+    This class is used to access UptimeRobot read-only API.
 
-    def request(self, url, data):
+    Attributes:
+        BASE_URL (str): The API base URL.
+    """
+
+    BASE_URL = "https://api.uptimerobot.com/v2/"
+
+    def __init__(self, api_key: str) -> None:
+        """Create an instance
+
+        Args:
+            api_key (str): The UptimeRobot's API key
+        """
+
+        self.api_key = api_key
+
+    def request(self, url: str, data: dict) -> Tuple[bool, dict]:
+        """Make a request against the API
+
+        Args:
+            url (str): The UptimeRobot's API URL
+            data (dict): The payload
+
+        Returns:
+            A Tuple where the first element is a bool that rappresent whether
+            the request was successful or not.
+            The second element contains the response data.
+
+        Raises:
+            RequestException: If something went wrong with the request.
+        """
         response = requests.post(url, data=data)
         content = response.json()
 
         if content.get('stat'):
             stat = content.get('stat')
             if stat == "ok":
-                return True, content.get("monitors")
+                return True, content
         return False, content
 
-    def get_monitors(self, response_times=False, response_times_limit=False, logs=False, logs_limit=False, all_time_uptime_ratio=False):
+    def get_monitors(self, response_times: bool = False, response_times_limit: int = 0, logs: bool = False, logs_limit: int = 0) -> Tuple[bool, dict]:
         """
-        Returns status and response payload for all known monitors.
+        Returns the API response for all known monitors.
         https://uptimerobot.com/api/#getMonitorsWrap
+
+        Args:
+            response_times (bool): Whether to include response times. Default is False.
+            response_times_limit (int): How many response times to include. If <= 0 the option is ignored. Default is 0.
+            logs (bool): Whether to include logs. Default is False.
+            logs_limit (int): How many logs to include. If <= 0 the option is ignored. Default is 0.
+
+        Returns:
+            A Tuple where the first element is a bool that rappresent whether
+            the request was successful or not.
+            The second element contains the response data.
+
+        Raises:
+            RequestException: If something went wrong with the request.
         """
 
-        url = f'{self.base_url}getMonitors?format=json'
+        url = f'{self.BASE_URL}getMonitors?format=json'
         data = {
             'api_key': self.api_key
         }
@@ -32,15 +74,12 @@ class UptimeRobotReadApi():
         # Response times
         if response_times:
             data["response_times"] = 1
-            if response_times_limit:
+            if response_times_limit > 0:
                 data["response_times_limit"] = response_times_limit
 
         if logs:
             data["logs"] = 1
-            if logs_limit:
+            if logs_limit > 0:
                 data["logs_limit"] = logs_limit
-
-        if all_time_uptime_ratio:
-            data["all_time_uptime_ratio"] = 1
 
         return self.request(url, data)

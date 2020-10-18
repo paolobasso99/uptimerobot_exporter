@@ -1,4 +1,5 @@
-def display_banner():
+def display_banner() -> None:
+    """Display my awesome banner"""
     string = """
 ______                     
 | ___ \                    

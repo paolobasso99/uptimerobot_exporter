@@ -1,58 +1,42 @@
+"""uptimerobot_exporter entrypoint
+This is the main entrypoint used to run uptimerobot_exporter.
+"""
+
 import time
-import os
 import logging
 from prometheus_client import start_http_server
-from dotenv import load_dotenv
 from UptimeRobotCollector import UptimeRobotCollector
 from banner import display_banner
+from Settings import Settings
+
+DEFAULT_SETTINGS = {
+    "PORT": 8000,
+    "INTERVAL_SECONDS": 300,
+    "LOG_LEVEL": "INFO"
+}
 
 if __name__ == '__main__':
     display_banner()
 
-    # Load and check envirorment variables
-    load_dotenv()
-
-    PORT = 8000
-    if "PORT" in os.environ:
-        PORT = int(os.getenv("PORT"))
-
-    if "UPTIMEROBOT_READ_API_KEY" not in os.environ:
-        raise ValueError(
-            'UPTIMEROBOT_READ_API_KEY envirorment variable is not set.')
-
-    INTERVAL_SECONDS = 300
-    if "INTERVAL_SECONDS" in os.environ:
-        INTERVAL_SECONDS = int(os.getenv("INTERVAL_SECONDS"))
-
-    # Set up logging
-    level = logging.DEBUG
-    levels = {
-        "DEBUG": logging.DEBUG,
-        "INFO": logging.INFO,
-        "WARNING": logging.WARNING,
-        "ERROR": logging.ERROR,
-        "CRITICAL": logging.CRITICAL,
-    }
-
-    if "LOG_LEVEL" in os.environ and os.getenv("LOG_LEVEL") in levels:
-        level = levels[os.getenv("LOG_LEVEL")]
-
-    logging.getLogger().setLevel(level)
+    # Load settings
+    settings = Settings(DEFAULT_SETTINGS)
 
     logging.info(
         "uptimerobot_exporter version 0.0.1 by https://github.com/paolobasso99")
     logging.info("Initializated uptimerobot_exporter with:")
-    logging.info("LOG_LEVEL="+os.getenv("LOG_LEVEL"))
-    logging.info("INTERVAL_SECONDS="+os.getenv("INTERVAL_SECONDS"))
-    logging.info(f"Access http://localhost:{PORT}")
+    logging.info("UPTIMEROBOT_READ_API_KEY=<redacted>")
+    logging.info("LOG_LEVEL=" + settings.get("LOG_LEVEL"))
+    logging.info("PORT=" + str(settings.get("PORT")))
+    logging.info("INTERVAL_SECONDS=" + str(settings.get("INTERVAL_SECONDS")))
+    logging.info(f'Access http://localhost:{settings.get("PORT")}')
 
     # Create collector instance
-    collector = UptimeRobotCollector(os.getenv("UPTIMEROBOT_READ_API_KEY"))
+    collector = UptimeRobotCollector(settings.get("UPTIMEROBOT_READ_API_KEY"))
 
     # Start up the server to expose the metrics.
-    start_http_server(PORT)
+    start_http_server(settings.get("PORT"))
 
     # Collects
     while True:
         collector.collect()
-        time.sleep(INTERVAL_SECONDS)
+        time.sleep(settings.get("INTERVAL_SECONDS"))
