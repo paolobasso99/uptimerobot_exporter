@@ -5,9 +5,9 @@ This is the main entrypoint used to run uptimerobot_exporter.
 import time
 import logging
 from prometheus_client import start_http_server
-from uptimerobot_exporter.UptimeRobotCollector import UptimeRobotCollector
+from uptimerobot_collector.uptimerobot_collector import UptimerobotCollector
 from banner import display_banner
-from settings.Settings import Settings
+from settings.settings import Settings
 
 if __name__ == '__main__':
     display_banner()
@@ -22,13 +22,13 @@ if __name__ == '__main__':
     logging.info("LOG_LEVEL=" + settings.get("LOG_LEVEL"))
     logging.info("PORT=" + str(settings.get("PORT")))
     logging.info("INTERVAL_SECONDS=" + str(settings.get("INTERVAL_SECONDS")))
-    logging.info(f'Access http://localhost:{settings.get("PORT")}')
 
     # Create collector instance
-    collector = UptimeRobotCollector(settings.get("UPTIMEROBOT_READ_API_KEY"))
+    collector = UptimerobotCollector(settings.get("UPTIMEROBOT_READ_API_KEY"))
 
     # Start up the server to expose the metrics.
     start_http_server(settings.get("PORT"))
+    logging.info(f'Metrics served at http://localhost:{settings.get("PORT")}')
 
     # Collects
     while True:

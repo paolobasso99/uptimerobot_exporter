@@ -1,4 +1,9 @@
 {
     "editor.tabSize": 4,
-    "python.pythonPath": "e:\\Paolo Basso\\Develop\\uptimerobot-exporter\\venv\\Scripts\\python.exe"
+    "python.pythonPath": "e:\\Paolo Basso\\Develop\\uptimerobot-exporter\\venv\\Scripts\\python.exe",
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    "files.exclude": {
+        "**/__pycache__": true
+    }
 }

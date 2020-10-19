@@ -2,22 +2,23 @@ import time
 import logging
 from prometheus_client import Gauge
 from requests import RequestException
-from uptimerobot_exporter.UptimeRobotReadApi import UptimeRobotReadApi
+from uptimerobot_collector.uptimerobot_read_api import UptimerobotReadApi
 
 
-class UptimeRobotCollector():
+class UptimerobotCollector():
     """Metrics collector class.
-    This class is used to access collect UptimeRobot metrics.
+    This class is used to access collect Uptimerobot metrics.
 
     Attributes:
         METRICS (dict): The metrics to collect.
+        API_OPTIONAL_PARAMS (dict): The optional params used to make the API call.
     """
 
     # Define metrics
     METRICS = {
         'up': Gauge('uptimerobot_up',
                     'The last scrape was successful'),
-        'scrape_duration_seconds': Gauge('uptimerobot_scrape_duration_seconds',
+        'scrape_duration_milliseconds': Gauge('uptimerobot_scrape_duration_milliseconds',
                                          'The duration of the last scrape in seconds'),
         'monitor_status': Gauge('uptimerobot_monitor_status',
                                 'Status of the monitor: 0 = paused, 1 = not checked, 2 = up, 8 = seems down, 9 = down',
@@ -36,14 +37,21 @@ class UptimeRobotCollector():
                                       ['id', 'url', 'name', 'type', 'logtype'])
     }
 
+    API_OPTIONAL_PARAMS = {
+        "response_times": "1",
+        "response_times_limit": "1",
+        "logs": "1",
+        "logs_limit": "1"
+    }
+
     def __init__(self, api_key: str) -> None:
         """Create a collector
 
         Args:
-            api_key (str): The UptimeRobot's API key
+            api_key (str): The Uptimerobot's API key
         """
 
-        self._api_wrapper = UptimeRobotReadApi(api_key)
+        self._api_wrapper = UptimerobotReadApi(api_key)
 
     def collect(self) -> None:
         """Start the collection"""
@@ -52,13 +60,12 @@ class UptimeRobotCollector():
         logging.info('Starting scraping at ' + str(start))
 
         try:
-            status, monitors = self._api_wrapper.get_monitors(
-                response_times=True, response_times_limit=1, logs=True, logs_limit=1)
+            status, monitors = self._api_wrapper.get_monitors(self.API_OPTIONAL_PARAMS)
 
             if not status:
                 raise RequestException('Unable to get monitors from the API.')
-            else:
-                logging.debug('Got monitors informations from Uptimerobot API')
+
+            logging.debug('Got monitors informations from Uptimerobot API')
 
             for monitor in monitors:
                 self.export_monitor(monitor)
@@ -68,9 +75,9 @@ class UptimeRobotCollector():
             logging.error(e)
             self.METRICS["up"].set(0)
 
-        duration = time.time() - start
-        self.METRICS["scrape_duration_seconds"].set(duration)
-        logging.info(f"Scrape complete in {duration} seconds")
+        duration_ms = (time.time() - start) * 1000
+        self.METRICS["scrape_duration_milliseconds"].set(duration_ms)
+        logging.info(f"Scrape complete in {duration_ms} milliseconds")
 
     def export_monitor(self, monitor: dict) -> None:
         """Export a monitor's metrics
