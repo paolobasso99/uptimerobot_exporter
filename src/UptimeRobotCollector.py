@@ -52,15 +52,15 @@ class UptimeRobotCollector():
         logging.info('Starting scraping at ' + str(start))
 
         try:
-            status, response = self._api_wrapper.get_monitors(
+            status, monitors = self._api_wrapper.get_monitors(
                 response_times=True, response_times_limit=1, logs=True, logs_limit=1)
 
             if not status:
-                raise RequestException(response)
+                raise RequestException('Unable to get monitors from the API.')
             else:
                 logging.debug('Got monitors informations from Uptimerobot API')
 
-            for monitor in response.get("monitors"):
+            for monitor in monitors:
                 self.export_monitor(monitor)
 
             self.METRICS["up"].set(1)
