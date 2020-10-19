@@ -34,6 +34,8 @@ class Settings:
             defaults (dict): The default settings.
         """
 
+        self._current_settings = {}
+
         # Set current settings as defaults
         self.reset_default()
 
@@ -64,7 +66,8 @@ class Settings:
 
     def reset_default(self) -> None:
         """Reset settings to the default values"""
-        self._current_settings = self.DEFAULT
+
+        self._current_settings.update(self.DEFAULT)
 
     def load_env(self) -> None:
         """Load envirorment variables
@@ -79,21 +82,21 @@ class Settings:
         load_dotenv()
 
         # LOG_LEVEL
-        self.process_log_level()
+        self.load_log_level()
 
         # UPTIMEROBOT_READ_API_KEY
-        self.process_uptimerobot_read_api_key()
+        self.load_uptimerobot_read_api_key()
 
         # PORT
-        self.process_port()
+        self.load_port()
 
         # INTERVAL_SECONDS
-        self.process_interval_seconds()
+        self.load_interval_seconds()
 
         logging.debug("Envirorment variables loaded")
         
 
-    def process_uptimerobot_read_api_key(self) -> None:
+    def load_uptimerobot_read_api_key(self) -> None:
         """Load and check UPTIMEROBOT_READ_API_KEY envirorment variable
 
         Raises:
@@ -107,7 +110,7 @@ class Settings:
             raise ValueError(
                 'UPTIMEROBOT_READ_API_KEY envirorment variable is not set.')
 
-    def process_port(self) -> None:
+    def load_port(self) -> None:
         """Load and check PORT envirorment variable
 
         Raises:
@@ -121,7 +124,7 @@ class Settings:
 
             self.set("PORT", port)
 
-    def process_interval_seconds(self) -> None:
+    def load_interval_seconds(self) -> None:
         """Load and check INTERVAL_SECONDS envirorment variable
 
         Raises:
@@ -136,7 +139,7 @@ class Settings:
 
             self.set("INTERVAL_SECONDS", interval)
 
-    def process_log_level(self) -> None:
+    def load_log_level(self) -> None:
         """Load and check LOG_LEVEL envirorment variable"""
         
         log_level = "INFO"
@@ -145,9 +148,9 @@ class Settings:
             if os.getenv("LOG_LEVEL") in self.LOG_LEVELS:
                 log_level = os.getenv("LOG_LEVEL")
             else:
-                logging.warn(
+                logging.warning(
                     f'{os.getenv("LOG_LEVEL")} is not a valid LOG_LEVEL, please pick between: DEBUG, INFO, WARN, ERROR, CRITICAL')
-                logging.warn('Fallback to default LOG_LEVEL=INFO')
+                logging.warning('Fallback to default LOG_LEVEL=INFO')
                 log_level = "INFO"
 
             self.set("LOG_LEVEL", log_level)
