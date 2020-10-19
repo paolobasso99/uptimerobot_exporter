@@ -110,11 +110,13 @@ class UptimeRobotReadApi():
 
         success = True
         condition = True
+        offset = 0
         while condition:
-            status, page = self.get_monitors_paginated(0, response_times, response_times_limit, logs, logs_limit)
+            status, page = self.get_monitors_paginated(offset, response_times, response_times_limit, logs, logs_limit)
 
             if status:
                 monitors += page["monitors"]
+                offset += page["pagination"]["limit"]
                 condition = page["pagination"]["total"] >= (page["pagination"]["limit"] + page["pagination"]["offset"])
             else:
                 success = False

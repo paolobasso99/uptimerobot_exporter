@@ -10,5 +10,5 @@ services:
       - LOG_LEVEL=${LOG_LEVEL}
       - PORT=${PORT}
     ports:
-      - 8000:8000
+      - ${PORT}:${PORT}
     restart: unless-stopped

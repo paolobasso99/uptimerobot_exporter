@@ -2,7 +2,7 @@ import time
 import logging
 from prometheus_client import Gauge
 from requests import RequestException
-from UptimeRobotReadApi import UptimeRobotReadApi
+from uptimerobot_exporter.UptimeRobotReadApi import UptimeRobotReadApi
 
 
 class UptimeRobotCollector():

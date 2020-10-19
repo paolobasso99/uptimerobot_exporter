@@ -5,21 +5,15 @@ This is the main entrypoint used to run uptimerobot_exporter.
 import time
 import logging
 from prometheus_client import start_http_server
-from UptimeRobotCollector import UptimeRobotCollector
+from uptimerobot_exporter.UptimeRobotCollector import UptimeRobotCollector
 from banner import display_banner
-from Settings import Settings
-
-DEFAULT_SETTINGS = {
-    "PORT": 8000,
-    "INTERVAL_SECONDS": 300,
-    "LOG_LEVEL": "INFO"
-}
+from settings.Settings import Settings
 
 if __name__ == '__main__':
     display_banner()
 
     # Load settings
-    settings = Settings(DEFAULT_SETTINGS)
+    settings = Settings()
 
     logging.info(
         "uptimerobot_exporter version 0.0.1 by https://github.com/paolobasso99")

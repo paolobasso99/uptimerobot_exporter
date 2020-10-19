@@ -10,8 +10,14 @@ class Settings:
 
     Attributes:
         LOG_LEVELS (dict): The possible log levels.
-        defaults (dict): The default settings passed as a parameter to the constructor.
+        DEFAULT (dict): The default settings.
     """
+
+    DEFAULT = {
+        "PORT": 8000,
+        "INTERVAL_SECONDS": 300,
+        "LOG_LEVEL": "INFO"
+    }
 
     LOG_LEVELS = {
         "DEBUG": logging.DEBUG,
@@ -21,7 +27,7 @@ class Settings:
         "CRITICAL": logging.CRITICAL,
     }
 
-    def __init__(self, defaults: dict) -> None:
+    def __init__(self) -> None:
         """Create a Settings instance
 
         Args:
@@ -29,8 +35,7 @@ class Settings:
         """
 
         # Set current settings as defaults
-        self.defaults = defaults
-        self.reset_defaults()
+        self.reset_default()
 
         # Load envirorment variables
         self.load_env()
@@ -57,9 +62,9 @@ class Settings:
 
         return self._current_settings[name]
 
-    def reset_defaults(self) -> None:
+    def reset_default(self) -> None:
         """Reset settings to the default values"""
-        self._current_settings = self.defaults
+        self._current_settings = self.DEFAULT
 
     def load_env(self) -> None:
         """Load envirorment variables
@@ -103,33 +108,31 @@ class Settings:
                 'UPTIMEROBOT_READ_API_KEY envirorment variable is not set.')
 
     def process_port(self) -> None:
-        """Load and check PORT envirorment variable"""
+        """Load and check PORT envirorment variable
+
+        Raises:
+            ValueError: If PORT env var is not a positive integer.
+        """
 
         if "PORT" in os.environ:
-            try:
-                port = int(os.getenv("PORT"))
-                if port <= 0:
-                    raise ValueError("PORT must be a positive integer")
-            except ValueError as e:
-                logging.error(e)
-                logging.error("Fallback to the default PORT=8000")
-                port = 8000
+            port = int(os.getenv("PORT"))
+            if port <= 0:
+                raise ValueError("PORT must be a positive integer")
 
             self.set("PORT", port)
 
     def process_interval_seconds(self) -> None:
-        """Load and check INTERVAL_SECONDS envirorment variable"""
+        """Load and check INTERVAL_SECONDS envirorment variable
+
+        Raises:
+            ValueError: If INTERVAL_SECONDS env var is not a positive integer.
+        """
 
         if "INTERVAL_SECONDS" in os.environ:
-            try:
-                interval = int(os.getenv("INTERVAL_SECONDS"))
-                if interval <= 0:
-                    raise ValueError(
-                        "INTERVAL_SECONDS must be a positive integer")
-            except ValueError as e:
-                logging.error(e)
-                logging.error("Fallback to the default INTERVAL_SECONDS=300")
-                interval = 300
+            interval = int(os.getenv("INTERVAL_SECONDS"))
+            if interval <= 0:
+                raise ValueError(
+                    "INTERVAL_SECONDS must be a positive integer")
 
             self.set("INTERVAL_SECONDS", interval)
 
