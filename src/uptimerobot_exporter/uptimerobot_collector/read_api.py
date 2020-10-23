@@ -106,31 +106,26 @@ class UptimerobotReadApi():
             AttributeError: If optional_params is not a dict.
         """
         
-        # Check optional_params attribute
-        if optional_params is not None and (not isinstance(optional_params, dict)):
-            raise AttributeError("optional_params has to be a dictionary")
-
         # Initialize optional_params
         if optional_params is None:
             optional_params = {}
 
-        monitors = []
+        # Check optional_params attribute
+        if not isinstance(optional_params, dict):
+            raise AttributeError("optional_params has to be a dictionary")
 
-        success = True
-        condition = True
-        offset = 0
-        while condition:
-            optional_params["offset"] = offset
-            
+        monitors = []
+        has_more_pages = True
+        optional_params["offset"] = 0
+        while has_more_pages:
             status, page = self.get_monitors_paginated(optional_params)
 
             if status:
                 monitors += page["monitors"]
-                offset += page["pagination"]["limit"]
-                condition = page["pagination"]["total"] >= (
+                optional_params["offset"] += page["pagination"]["limit"]
+                has_more_pages = page["pagination"]["total"] >= (
                     page["pagination"]["limit"] + page["pagination"]["offset"])
             else:
-                success = False
-                condition = False
+                return False, monitors
 
-        return success, monitors
+        return True, monitors

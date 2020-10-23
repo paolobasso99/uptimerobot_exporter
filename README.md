@@ -2,7 +2,7 @@
 [![Maintainability](https://api.codeclimate.com/v1/badges/0af5fa985013098bc87a/maintainability)](https://codeclimate.com/github/paolobasso99/uptimerobot_exporter/maintainability)
 [![Test Coverage](https://api.codeclimate.com/v1/badges/0af5fa985013098bc87a/test_coverage)](https://codeclimate.com/github/paolobasso99/uptimerobot_exporter/test_coverage)
 [![CodeFactor](https://www.codefactor.io/repository/github/paolobasso99/uptimerobot_exporter/badge)](https://www.codefactor.io/repository/github/paolobasso99/uptimerobot_exporter)
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fpaolobasso99%2Fmonitoring.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fpaolobasso99%2Fmonitoring?ref=badge_shield)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fpaolobasso99%2Fuptimerobot_exporter.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fpaolobasso99%2Fuptimerobot_exporter?ref=badge_shield)
 [![Known Vulnerabilities](https://snyk.io/test/github/paolobasso99/uptimerobot_exporter/badge.svg?targetFile=requirements.txt)](https://snyk.io/test/github/paolobasso99/uptimerobot_exporter?targetFile=requirements.txt)
 
 uptimerobot_exporter is a [Prometheus](https://prometheus.io/) exporter for [Uptimerobot](https://uptimerobot.com/).
