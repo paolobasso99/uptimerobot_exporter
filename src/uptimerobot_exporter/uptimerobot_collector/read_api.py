@@ -83,7 +83,7 @@ class UptimerobotReadApi():
 
         return self.request(url, data)
 
-    def get_monitors(self, optional_params: dict = None) -> Tuple[bool, list]:
+    def get_monitors(self, optional_params: dict = {}) -> Tuple[bool, list]:
         """
         Returns the API response for all known monitors.
         https://uptimerobot.com/api/#getMonitorsWrap
@@ -105,10 +105,6 @@ class UptimerobotReadApi():
             RequestException: If something went wrong with the request.
             AttributeError: If optional_params is not a dict.
         """
-        
-        # Initialize optional_params
-        if optional_params is None:
-            optional_params = {}
 
         # Check optional_params attribute
         if not isinstance(optional_params, dict):
