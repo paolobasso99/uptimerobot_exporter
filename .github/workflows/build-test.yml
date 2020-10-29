@@ -46,3 +46,4 @@ jobs:
         uses: marsam/codeclimate-action@master
         with:
           reporter-id: ${{ secrets.CC_TEST_REPORTER_ID }}
+          command: coverage run -m unittest
