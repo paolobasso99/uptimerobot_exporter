@@ -1,8 +1,10 @@
-import time
 import logging
+import time
+
 from prometheus_client import Gauge
 from requests import RequestException
-from uptimerobot_collector.read_api import UptimerobotReadApi
+
+from .read_api import UptimerobotReadApi
 
 
 class UptimerobotCollector():
@@ -88,44 +90,27 @@ class UptimerobotCollector():
 
         logging.debug(f'Exporting {monitor["friendly_name"]} metrics')
 
-        # Default metrics value
-        status = 9
-        response_time = 0
-        response_time_average = 0
-        log_type = 0
-        log_datetime = 0
-
-        # Statuss
+        # Status
         if "status" in monitor:
-            status = monitor["status"]
-
-        self.METRICS["monitor_status"].labels(id=monitor["id"], url=monitor["url"], name=monitor[
-            "friendly_name"], type=monitor["type"]).set(status)
+            self.METRICS["monitor_status"].labels(id=monitor["id"], url=monitor["url"], name=monitor[
+            "friendly_name"], type=monitor["type"]).set(monitor["status"])
 
         # Last response time
         if len(monitor["response_times"]) > 0:
-            response_time = monitor["response_times"][0]["value"]
-
-        self.METRICS["monitor_response_time"].labels(id=monitor["id"], url=monitor["url"], name=monitor[
-            "friendly_name"], type=monitor["type"], status=monitor["status"]).set(response_time)
+            self.METRICS["monitor_response_time"].labels(id=monitor["id"], url=monitor["url"], name=monitor[
+                "friendly_name"], type=monitor["type"], status=monitor["status"]).set(monitor["response_times"][0]["value"])
 
         # Average response time
         if "average_response_time" in monitor:
-            response_time_average = monitor["average_response_time"]
-
-        self.METRICS["monitor_response_time_average"].labels(id=monitor["id"], url=monitor["url"], name=monitor[
-            "friendly_name"], type=monitor["type"]).set(response_time_average)
+            self.METRICS["monitor_response_time_average"].labels(id=monitor["id"], url=monitor["url"], name=monitor[
+            "friendly_name"], type=monitor["type"]).set(monitor["average_response_time"])
 
         # Log type
         if len(monitor["logs"]) > 0:
-            log_type = monitor["logs"][0]["type"]
-
-        self.METRICS["monitor_log_type"].labels(id=monitor["id"], url=monitor["url"], name=monitor[
-            "friendly_name"], type=monitor["type"]).set(log_type)
+            self.METRICS["monitor_log_type"].labels(id=monitor["id"], url=monitor["url"], name=monitor[
+            "friendly_name"], type=monitor["type"]).set(monitor["logs"][0]["type"])
 
         # Log datetime
         if len(monitor["logs"]) > 0:
-            log_datetime = monitor["logs"][0]["datetime"]
-
-        self.METRICS["monitor_log_datetime"].labels(id=monitor["id"], url=monitor["url"], name=monitor[
-            "friendly_name"], type=monitor["type"], logtype=monitor["logs"][0]["type"]).set(log_datetime)
+            self.METRICS["monitor_log_datetime"].labels(id=monitor["id"], url=monitor["url"], name=monitor[
+            "friendly_name"], type=monitor["type"], logtype=monitor["logs"][0]["type"]).set(monitor["logs"][0]["datetime"])

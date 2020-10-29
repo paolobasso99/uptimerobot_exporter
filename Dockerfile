@@ -1,8 +1,8 @@
 # set base image (host OS)
-FROM python:3.8
+FROM python:3.9
 
 # set the working directory in the container
-WORKDIR /uptimerobot_exporter
+WORKDIR /app
 
 # copy the dependencies file to the working directory
 COPY requirements.txt .
@@ -11,7 +11,7 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 # copy the content of the local src directory to the working directory
-COPY src/uptimerobot_exporter/ .
+COPY uptimerobot_exporter/ uptimerobot_exporter
 
 # command to run on container start
-CMD [ "python", "./main.py" ] 
+CMD [ "python", "-m", "uptimerobot_exporter" ] 

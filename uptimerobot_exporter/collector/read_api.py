@@ -1,6 +1,6 @@
-import requests
-import math
 from typing import Tuple
+
+import requests
 
 
 class UptimerobotReadApi():
@@ -22,11 +22,11 @@ class UptimerobotReadApi():
 
         self.api_key = api_key
 
-    def request(self, url: str, data: dict) -> Tuple[bool, dict]:
+    def request(self, endpoint: str, data: dict) -> Tuple[bool, dict]:
         """Make a request against the API
 
         Args:
-            url (str): The Uptimerobot's API URL
+            endpoint (str): The Uptimerobot's API endpoint
             data (dict): The payload
 
         Returns:
@@ -37,7 +37,7 @@ class UptimerobotReadApi():
         Raises:
             RequestException: If something went wrong with the request.
         """
-        response = requests.post(url, data=data)
+        response = requests.post(self.BASE_URL + endpoint, data=data)
         content = response.json()
 
         if content.get('stat'):
@@ -66,24 +66,20 @@ class UptimerobotReadApi():
 
         Raises:
             RequestException: If something went wrong with the request.
-            AttributeError: If optional_params is not a dict.
         """
 
-        # Check optional_params attribute
-        if optional_params is not None and (not isinstance(optional_params, dict)):
-            raise AttributeError("optional_params has to be a dictionary")
-
-        url = f'{self.BASE_URL}getMonitors?format=json'
+        endpoint = 'getMonitors'
         data = {
-            'api_key': self.api_key
+            'api_key': self.api_key,
+            'format': 'json'
         }
 
         if len(optional_params) > 0:
             data.update(optional_params)
 
-        return self.request(url, data)
+        return self.request(endpoint, data)
 
-    def get_monitors(self, optional_params: dict = {}) -> Tuple[bool, list]:
+    def get_monitors(self, optional_params: dict = None) -> Tuple[bool, list]:
         """
         Returns the API response for all known monitors.
         https://uptimerobot.com/api/#getMonitorsWrap
@@ -103,12 +99,10 @@ class UptimerobotReadApi():
 
         Raises:
             RequestException: If something went wrong with the request.
-            AttributeError: If optional_params is not a dict.
         """
 
-        # Check optional_params attribute
-        if not isinstance(optional_params, dict):
-            raise AttributeError("optional_params has to be a dictionary")
+        if optional_params is None:
+            optional_params = {}
 
         monitors = []
         has_more_pages = True
@@ -119,7 +113,7 @@ class UptimerobotReadApi():
             if status:
                 monitors += page["monitors"]
                 optional_params["offset"] += page["pagination"]["limit"]
-                has_more_pages = page["pagination"]["total"] >= (
+                has_more_pages = page["pagination"]["total"] > (
                     page["pagination"]["limit"] + page["pagination"]["offset"])
             else:
                 return False, monitors
