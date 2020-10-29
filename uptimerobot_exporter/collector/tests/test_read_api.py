@@ -90,7 +90,7 @@ class TestReadApi(unittest.TestCase):
 
         status, monitors = read_api.get_monitors()
 
-        assert status == True
+        assert status is True
         assert len(monitors) == 6
 
 
