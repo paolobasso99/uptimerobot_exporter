@@ -43,7 +43,8 @@ jobs:
           pip install coverage
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Test coverage
-        uses: marsam/codeclimate-action@master
-        with:
-          reporter-id: ${{ secrets.CC_TEST_REPORTER_ID }}
-          command: coverage run -m unittest
+        run: |
+          coverage run -m unittest
+      - name: Upload to codecov
+        run: |
+          bash <(curl -s https://codecov.io/bash)
