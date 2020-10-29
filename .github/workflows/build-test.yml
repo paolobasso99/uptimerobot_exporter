@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
     matrix:
-      python-version: [3.8, 3.9]
+      python-version: [3.9]
 
     steps:
       - uses: actions/checkout@v2
@@ -32,12 +32,13 @@ jobs:
           python -m unittest
 
   coverage:
-      needs: [ test ]
-      name: coverage
-      runs-on: ubuntu-latest
-      steps:
+    needs: [ test ]
+    name: coverage
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install dependencies
@@ -46,7 +47,7 @@ jobs:
           pip install coverage
           if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
       - name: Test coverage
-      - uses: paambaati/codeclimate-action@v2.2.4
+        uses: paambaati/codeclimate-action@v2.2.4
         env:
           CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
         with:
