@@ -17,3 +17,9 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
           repository: paolobasso/uptimerobot_exporter
           tag_with_ref: true
+      - name: Docker Hub Description
+        uses: peter-evans/dockerhub-description@v2.1.0
+        env:
+          DOCKERHUB_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKERHUB_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+          DOCKERHUB_REPOSITORY: paolobasso/uptimerobot_exporter
