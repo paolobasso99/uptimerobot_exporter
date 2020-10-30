@@ -52,11 +52,11 @@ Add a job to your Prometheus configs:
 | ------------------------------------------------------ | ----- | -------------------------------------- | ------------------------------------------------------------------------------------ |
 | uptimerobot_up                                         | Gauge |                                        | The last scrape was successful                                                       |
 | uptimerobot_scrape_duration_milliseconds               | Gauge |                                        | The duration of the last scrape in seconds                                           |
-| uptimerobot_monitor_status                             | Gauge | 'id', 'url', 'name', 'type'            | Status of the monitor: 0 = paused, 1 = not checked, 2 = up, 8 = seems down, 9 = down |
-| uptimerobot_monitor_response_time_millisecond          | Gauge | 'id', 'url', 'name', 'type', 'status'  | Last response time of the monitor in milliseconds                                    |
-| uptimerobot_monitor_response_time_average_milliseconds | Gauge | 'id', 'url', 'name', 'type'            | Average response time of the monitor in milliseconds                                 |
-| uptimerobot_monitor_log_type                           | Gauge | 'id', 'url', 'name', 'type'            | Last log type of the monitor: 1 = down, 2 = up, 98 = started, 99 = paused            |
-| uptimerobot_monitor_log_datetime                       | Gauge | 'id', 'url', 'name', 'type', 'logtype' | Last log of the monitor datetime                                                     |
+| uptimerobot_monitor_status                             | Gauge | id, url, name, type            | Status of the monitor: 0 = paused, 1 = not checked, 2 = up, 8 = seems down, 9 = down |
+| uptimerobot_monitor_response_time_millisecond          | Gauge | id, url, name, type, status  | Last response time of the monitor in milliseconds                                    |
+| uptimerobot_monitor_response_time_average_milliseconds | Gauge | id, url, name, type            | Average response time of the monitor in milliseconds                                 |
+| uptimerobot_monitor_log_type                           | Gauge | id, url, name, type            | Last log type of the monitor: 1 = down, 2 = up, 98 = started, 99 = paused            |
+| uptimerobot_monitor_log_datetime                       | Gauge | id, url, name, type, logtype | Last log of the monitor datetime                                                     |
 
 
 ## Grafana Dashboard
