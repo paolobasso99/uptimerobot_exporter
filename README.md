@@ -33,7 +33,7 @@ If Prometheus is in the same server an internal Docker network without exposing 
 
 | Variable                 | Required | Default | Description                                                                                                                       |
 | ------------------------ | -------- | ------- | --------------------------------------------------------------------------------------------------------------------------------- |
-| UPTIMEROBOT_READ_API_KEY | YES      |         | Your Uptimerobot read API key. Found on the Uptimerobot's  My Settings page -> API Settings.                                 |
+| UPTIMEROBOT_READ_API_KEY | YES      |         | Your Uptimerobot read API key. Found on the Uptimerobot's  My Settings page -> API Settings.                                      |
 | INTERVAL_SECONDS         | NO       | 300     | How many seconds to wait between a scrape end and the next scrape.<br>You should use the Uptimerobot monitor's shortest interval. |
 | LOG_LEVEL                | NO       | INFO    | The log level.                                                                                                                    |
 | PORT                     | NO       | 8000    | The port where metrics will be exposed                                                                                            |
@@ -48,10 +48,22 @@ Add a job to your Prometheus configs:
          - targets: 
             - 'localhost:8000' # Use the PORT env var (Default is 8000)
 
-## Grafana Dashboard
-You can find the Grafana dashboard to visualize the metrics exposed by this exporter [here](https://to-be-defined/) and it looks like this:
+## Metrics exposed
+| Metric                                                 | Type  | Labels                                 | Description                                                                          |
+| ------------------------------------------------------ | ----- | -------------------------------------- | ------------------------------------------------------------------------------------ |
+| uptimerobot_up                                         | Gauge |                                        | The last scrape was successful                                                       |
+| uptimerobot_scrape_duration_milliseconds               | Gauge |                                        | The duration of the last scrape in seconds                                           |
+| uptimerobot_monitor_status                             | Gauge | 'id', 'url', 'name', 'type'            | Status of the monitor: 0 = paused, 1 = not checked, 2 = up, 8 = seems down, 9 = down |
+| uptimerobot_monitor_response_time_millisecond          | Gauge | 'id', 'url', 'name', 'type', 'status'  | Last response time of the monitor in milliseconds                                    |
+| uptimerobot_monitor_response_time_average_milliseconds | Gauge | 'id', 'url', 'name', 'type'            | Average response time of the monitor in milliseconds                                 |
+| uptimerobot_monitor_log_type                           | Gauge | 'id', 'url', 'name', 'type'            | Last log type of the monitor: 1 = down, 2 = up, 98 = started, 99 = paused            |
+| uptimerobot_monitor_log_datetime                       | Gauge | 'id', 'url', 'name', 'type', 'logtype' | Last log of the monitor datetime                                                     |
 
-![Dashboard](https://github.com/paolobasso99/uptimerobot_exporter/blob/main/dashboard.png?raw=true)
+
+## Grafana Dashboard
+You can find the Grafana dashboard to visualize the metrics exposed by this exporter [here]([https://to-be-defined/](https://github.com/paolobasso99/uptimerobot_exporter/blob/main/dashboard/dashboard.json?raw=true)) and it looks like this:
+
+![Dashboard](https://github.com/paolobasso99/uptimerobot_exporter/blob/main/dashboard/dashboard.png?raw=true)
 
 ## Why 
 I needed a Prometheus exporter for Uptimerobot and the existing ones that I found are either old, not updated, poorly documented or they expose not enough metrics. It was also an opportunity to learn more about Prometheus and Python.
